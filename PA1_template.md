@@ -1,4 +1,9 @@
-# Reproducible Research: Peer Assessment 1
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
 
 
 ## Loading and preprocessing the data
@@ -41,7 +46,7 @@ SUM<-tapply(Adata[,1],Adata[,2],sum,na.rm=T)
 hist(SUM, main = "Total number of steps taken each day")
 ```
 
-![](PA1_template_files/figure-html/histogram-1.png) 
+![plot of chunk histogram](figure/histogram-1.png) 
 
 3. Calculate and report the mean and median of the total number of steps taken per day
 
@@ -51,7 +56,7 @@ MEAN<-mean(SUM)
 MEDIAN<-median(SUM)
 ```
 
-According to the total number of steps taken per day, the mean value is 9354.2295082, the median is 1.0395\times 10^{4}.
+According to the total number of steps taken per day, the mean value is 9354.2295082, the median is 1.0395 &times; 10<sup>4</sup>.
 
 ## What is the average daily activity pattern?
 
@@ -64,7 +69,7 @@ Times<-length(Aver)
 plot(Adata[1:Times,3], Aver, type = "l", main = "Average number of steps", xlab = "5-minute interval", ylab = "Averaged across all days")
 ```
 
-![](PA1_template_files/figure-html/timeseriesplot-1.png) 
+![plot of chunk timeseriesplot](figure/timeseriesplot-1.png) 
 
 2. The five-minutes interval that contains the maximum number of steps on average across all the days in the dataset. 
 
@@ -107,7 +112,7 @@ NSUM<-tapply(Ndata[,1],Ndata[,2],sum)
 hist(NSUM, main = "New total number of steps taken each day")
 ```
 
-![](PA1_template_files/figure-html/new_histogram-1.png) 
+![plot of chunk new_histogram](figure/new_histogram-1.png) 
 
 
 ```r
@@ -115,7 +120,7 @@ NMEAN<-mean(NSUM)
 NMEDIAN<-median(NSUM)
 ```
 
-According to the new total number of steps taken per day, the new mean value is 1.0766189\times 10^{4}, the median is 1.0766189\times 10^{4}.
+According to the new total number of steps taken per day, the new mean value is 1.0766189 &times; 10<sup>4</sup>, the median is 1.0766189 &times; 10<sup>4</sup>.
 
 From two histograms we can easier see the difference, for futher research we subtract them and make a plot: 
 
@@ -124,7 +129,7 @@ From two histograms we can easier see the difference, for futher research we sub
 plot(as.Date(names(NSUM-SUM)), NSUM-SUM, pch=20, xlab = "each day", ylab = "difference", main = "Differentials when imputing missing data" )
 ```
 
-![](PA1_template_files/figure-html/difference-1.png) 
+![plot of chunk difference](figure/difference-1.png) 
 
 So, when imputing missing data, some  special day's total number will change enormous. But the entire graphic will not change that big. It's totally depends on the position and number of the missing values. 
 
@@ -167,6 +172,6 @@ plot(Ndata[1:Times,3], NAver_day, type = "l",xlab = "", ylab = "weekday")
 plot(Ndata[1:Times,3], NAver_end, type = "l",xlab = "Interval", ylab = "weekend")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![plot of chunk panel_plot](figure/panel_plot-1.png) 
 
 Thank you for your time!
