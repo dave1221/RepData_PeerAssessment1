@@ -1,16 +1,12 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
 1. Load the data
 
-```{r loaddata}
+
+```r
 if(!file.exists("activity.csv"))
 {
         fileUrl<-"http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
@@ -22,7 +18,8 @@ Adata<-read.csv("activity.csv",colClasses = c("numeric","character","numeric"))
 
 2. Transform the data
 
-```{r transform}
+
+```r
 Adata<-transform(Adata, date=as.Date(date))
 ```
 
@@ -32,57 +29,68 @@ This part ignore the missing value in the dataset.
 
 1. Calculate the total number of steps taken per day
 
-```{r  sum_per_day}
+
+```r
 SUM<-tapply(Adata[,1],Adata[,2],sum,na.rm=T)
 ```
 
 2. Make a histogram of the total number of steps taken each day
 
-```{r histogram}
+
+```r
 hist(SUM, main = "Total number of steps taken each day")
 ```
 
+![](PA1_template_files/figure-html/histogram-1.png) 
+
 3. Calculate and report the mean and median of the total number of steps taken per day
 
-```{r}
+
+```r
 MEAN<-mean(SUM)
 MEDIAN<-median(SUM)
 ```
 
-According to the total number of steps taken per day, the mean value is `r MEAN`, the median is `r MEDIAN`.
+According to the total number of steps taken per day, the mean value is 9354.2295082, the median is 1.0395\times 10^{4}.
 
 ## What is the average daily activity pattern?
 
 1. A time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
-```{r timeseriesplot}
+
+```r
 Aver<-tapply(Adata[,1],Adata[,3],mean,na.rm=T)
 Times<-length(Aver)
 plot(Adata[1:Times,3], Aver, type = "l", main = "Average number of steps", xlab = "5-minute interval", ylab = "Averaged across all days")
 ```
 
+![](PA1_template_files/figure-html/timeseriesplot-1.png) 
+
 2. The five-minutes interval that contains the maximum number of steps on average across all the days in the dataset. 
 
-```{r five_mins_interval}
+
+```r
 Max<-names(which.max(Aver))
 ```
 
-So the interval `r Max` contains the maximum number of steps on average across all the days
+So the interval 835 contains the maximum number of steps on average across all the days
 
 ## Imputing missing values
 
 1. Calculate and report the total number of missing values in the dataset (Noticed that variables date and interval have no missing values)
 
-```{r missing_values}
+
+```r
 No<-sum(as.numeric(is.na(Adata[,1])))
 ```
 
-The total number of missing values is `r No`
+The total number of missing values is 2304
 
 2. Devise a strategy for filling in all of the missing values (Here we use the mean for that 5-minute interval which seems more reasonable)
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
-```{r filled_in_NA_and_New_data}
+
+```r
 Ndata<-Adata
 for(i in 1:nrow(Ndata))
 {
@@ -93,23 +101,30 @@ for(i in 1:nrow(Ndata))
 
 4. Make a histogram of the total number of steps taken each day, Calculate and report the mean and median total number of steps taken per day.
 
-```{r new_histogram}
+
+```r
 NSUM<-tapply(Ndata[,1],Ndata[,2],sum)
 hist(NSUM, main = "New total number of steps taken each day")
 ```
 
-```{r new_mean_and_median}
+![](PA1_template_files/figure-html/new_histogram-1.png) 
+
+
+```r
 NMEAN<-mean(NSUM)
 NMEDIAN<-median(NSUM)
 ```
 
-According to the new total number of steps taken per day, the new mean value is `r NMEAN`, the median is `r NMEDIAN`.
+According to the new total number of steps taken per day, the new mean value is 1.0766189\times 10^{4}, the median is 1.0766189\times 10^{4}.
 
 From two histograms we can easier see the difference, for futher research we subtract them and make a plot: 
 
-```{r difference}
+
+```r
 plot(as.Date(names(NSUM-SUM)), NSUM-SUM, pch=20, xlab = "each day", ylab = "difference", main = "Differentials when imputing missing data" )
 ```
+
+![](PA1_template_files/figure-html/difference-1.png) 
 
 So, when imputing missing data, some  special day's total number will change enormous. But the entire graphic will not change that big. It's totally depends on the position and number of the missing values. 
 
@@ -119,7 +134,8 @@ So, when imputing missing data, some  special day's total number will change eno
 
 Construct weekday function (input a charactor list)
 
-```{r weekday_function}
+
+```r
 weekday<-function(x)
 {
         for(i in 1:length(x))
@@ -135,18 +151,22 @@ weekday<-function(x)
 
 Create a new factor variable in the dataset 
 
-```{r}
+
+```r
 Ndata<-transform(Ndata, weekday=weekday(weekdays(Ndata[,2],T)))
 ```
 
 2. A panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
 
-```{r}
+
+```r
 NAver_day<-tapply(Ndata[Ndata$weekday=="weekday",1],Ndata[Ndata$weekday=="weekday",3],mean)
 NAver_end<-tapply(Ndata[Ndata$weekday=="weekend",1],Ndata[Ndata$weekday=="weekend",3],mean)
 par(mfrow=c(2,1),mar=c(4,4,0,1))
 plot(Ndata[1:Times,3], NAver_day, type = "l",xlab = "", ylab = "weekday")
 plot(Ndata[1:Times,3], NAver_end, type = "l",xlab = "Interval", ylab = "weekend")
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
 
 Thank you for your time!
